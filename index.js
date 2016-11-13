@@ -1,11 +1,16 @@
 'use strict'
 let cp = require('child_process')
-let vlcCommand = require('vlc-command')
 let fs = require('fs')
+let os = require('os')
+let path = require('path')
 let request = require('request')
+let vlcCommand = require('vlc-command')
+
 let providers = {
   tv4play: require('./providers/tv4play')
 }
+
+let SUBTITLE_PATH = path.join(os.tmpDir(), 'adfree-temp-subs.srt')
 
 let getProvider = (url) => {
   if (url.includes('tv4play')) {
@@ -19,13 +24,13 @@ let play = (data, cb) => {
   vlcCommand((err, vlcPath) => {
     if (err) return cb(new Error('vlc not found'))
 
-    const args = [
-      // '--play-and-exit',
-      // '--video-on-top',
-      // '--quiet',
+    let args = [
       `--meta-title=${data.title}`,
       data.video
     ]
+    if (data.subtitles) {
+      args.push(`--sub-file=${SUBTITLE_PATH}`)
+    }
     let child = cp.spawn(vlcPath, args, {stdio: 'ignore', detached: true}) 
     child.unref()
   })
@@ -42,6 +47,15 @@ module.exports = (url, cb) => {
     if (err) {
       cb(err)
     }
-    play({video: data.video})
+    if (data.subtitles) {
+      request.get(data.subtitles).pipe(fs.createWriteStream(SUBTITLE_PATH)).on('finish', () => {
+        play({
+          video: data.video,
+          subtitles: SUBTITLE_PATH
+        })
+      })
+    } else {
+      play({video: data.video})
+    }
   })
 }
