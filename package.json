@@ -1,0 +1,22 @@
+{
+  "name": "vlc-adfree",
+  "version": "1.0.0",
+  "description": "Start ad free web videos in VLC",
+  "main": "index.js",
+  "bin": {
+    "vlc-adfree": "bin/cli.js"
+  },
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.78.0",
+    "vlc-command": "^1.1.1",
+    "xml2js": "^0.4.17"
+  },
+  "devDependencies": {
+    "tap": "^8.0.0"
+  }
+}
