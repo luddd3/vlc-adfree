@@ -11,6 +11,8 @@ if (!url || url === '') {
 }
 
 play(url, (err) => {
-  console.error(err)
-  process.exit(1)
+  if (err) {
+    console.error(err)
+    process.exit(1)
+  }
 })

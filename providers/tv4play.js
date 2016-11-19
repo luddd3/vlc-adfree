@@ -25,7 +25,7 @@ let extractInfo = (obj) => {
   return {
     title: title,
     video: items.filter(isVideo)[0].url,
-    subtitles: items.filter(isSubtitle)[0].url
+    subtitles: items.filter(isSubtitle).length > 0 && items.filter(isSubtitle)[0].url
   }
 }
 

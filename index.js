@@ -45,7 +45,7 @@ module.exports = (url, cb) => {
   }
   provider.get(url, (err, data) => {
     if (err) {
-      cb(err)
+      return cb(err)
     }
     if (data.subtitles) {
       request.get(data.subtitles).pipe(fs.createWriteStream(SUBTITLE_PATH)).on('finish', () => {
