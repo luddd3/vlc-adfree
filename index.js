@@ -10,7 +10,7 @@ let providers = {
   tv4play: require('./providers/tv4play')
 }
 
-let SUBTITLE_PATH = path.join(os.tmpDir(), 'adfree-temp-subs.srt')
+let SUBTITLE_PATH = path.join(os.tmpdir(), 'adfree-temp-subs.srt')
 
 let getProvider = (url) => {
   if (url.includes('tv4play')) {
@@ -28,9 +28,9 @@ let play = (data, cb) => {
       `--meta-title=${data.title}`,
       data.video
     ]
-    if (data.subtitles) {
-      args.push(`--sub-file=${SUBTITLE_PATH}`)
-    }
+    // if (data.subtitles) {
+    //   args.push(`--sub-file=${SUBTITLE_PATH}`)
+    // }
     let child = cp.spawn(vlcPath, args, {stdio: 'ignore', detached: true}) 
     child.unref()
   })
