@@ -11,30 +11,31 @@ let get = (loc, cb) => {
     if (err) {
       return cb(err)
     }
-    xml2js.parseString(body, (err, obj) => { 
+    xml2js.parseString(body, (err, obj) => {
       cb(err, extractInfo(obj))
     })
   })
-} 
+}
 
-let extractInfo = (obj) => {
+let extractInfo = obj => {
   let title = obj.playback.title[0]
-  let items = obj.playback.items.map(x => x.item)[0].map((item) => {
-    return {mediaFormat: item.mediaFormat[0], url: item.url[0]}
+  let items = obj.playback.items.map(x => x.item)[0].map(item => {
+    return { mediaFormat: item.mediaFormat[0], url: item.url[0] }
   })
   return {
     title: title,
     video: items.filter(isVideo)[0].url.replace('https://', 'http://'),
-    subtitles: items.filter(isSubtitle).length > 0 && items.filter(isSubtitle)[0].url
+    subtitles: items.filter(isSubtitle).length > 0 &&
+      items.filter(isSubtitle)[0].url
   }
 }
 
-let isVideo = (x) => {
+let isVideo = x => {
   return x.mediaFormat === 'mp4'
 }
 
-let isSubtitle = (x) => {
+let isSubtitle = x => {
   return x.mediaFormat === 'webvtt'
 }
 
-module.exports = {get}
+module.exports = { get }

@@ -12,7 +12,7 @@ let providers = {
 
 let SUBTITLE_PATH = path.join(os.tmpdir(), 'adfree-temp-subs.srt')
 
-let getProvider = (url) => {
+let getProvider = url => {
   if (url.includes('tv4play')) {
     return providers.tv4play
   } else {
@@ -24,14 +24,11 @@ let play = (data, cb) => {
   vlcCommand((err, vlcPath) => {
     if (err) return cb(new Error('vlc not found'))
 
-    let args = [
-      `--meta-title=${data.title}`,
-      data.video
-    ]
+    let args = [`--meta-title=${data.title}`, data.video]
     // if (data.subtitles) {
     //   args.push(`--sub-file=${SUBTITLE_PATH}`)
     // }
-    let child = cp.spawn(vlcPath, args, {stdio: 'ignore', detached: true}) 
+    let child = cp.spawn(vlcPath, args, { stdio: 'ignore', detached: true })
     child.unref()
   })
 }
@@ -48,14 +45,17 @@ module.exports = (url, cb) => {
       return cb(err)
     }
     if (data.subtitles) {
-      request.get(data.subtitles).pipe(fs.createWriteStream(SUBTITLE_PATH)).on('finish', () => {
-        play({
-          video: data.video,
-          subtitles: SUBTITLE_PATH
+      request
+        .get(data.subtitles)
+        .pipe(fs.createWriteStream(SUBTITLE_PATH))
+        .on('finish', () => {
+          play({
+            video: data.video,
+            subtitles: SUBTITLE_PATH
+          })
         })
-      })
     } else {
-      play({video: data.video})
+      play({ video: data.video })
     }
   })
 }
